@@ -20,4 +20,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy Vite build output
 COPY --from=build /app/dist /usr/share/nginx/html
 
+# FORCE SAFE PERMISSIONS (THIS FIXES 403)
+RUN chmod -R 755 /usr/share/nginx/html \
+    && chown -R nginx:nginx /usr/share/nginx/html
+
 CMD ["nginx", "-g", "daemon off;"]
