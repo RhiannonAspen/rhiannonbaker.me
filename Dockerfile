@@ -1,14 +1,14 @@
-FROM node:20-alpine
+FROM node:20-alpine AS production
 
-WORKDIR /main
+WORKDIR /app
 
-COPY package*.json ./
-RUN npm install 
+# Copy only runtime dependencies
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
-COPY . .
+# Copy built files from build stage
+COPY --from=build /app/dist ./dist
 
-RUN npm run build
-
-EXPOSE 5173
-CMD ["npm", "start"]
-
+# Expose port and start server
+EXPOSE 3000
+CMD ["npm", "run", "build"]
