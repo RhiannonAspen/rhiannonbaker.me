@@ -1,20 +1,18 @@
-# Use a specific, stable base image
-FROM node:20-alpine
+# Use a specific base image
+FROM node:lts 
+
+# Set environment variables (Hyperlift handles ports via its own variables)
+ENV CI=true
 
 # Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package.json and yarn.lock (or package-lock.json) first to leverage Docker cache
-COPY package*.json ./
+# Copy dependency files and install dependencies first (for caching efficiency)
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Install application dependencies
-RUN npm install --omit=dev
+# Copy the rest of the application code
+COPY . . 
 
-# Copy the rest of the application code to the container
-COPY . .
-
-# Inform Docker that the container listens on the specified network port at runtime
-EXPOSE 3000
-
-# Define the command to run the application
-CMD ["node", "server.js"]
+# Define the command to run your application
+CMD ["npm", "start"]
