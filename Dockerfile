@@ -1,9 +1,6 @@
 # Use a specific, stable base image
 FROM node:20-alpine
 
-# Set the working directory inside the container
-WORKDIR /src
-
 # Copy package.json and yarn.lock (or package-lock.json) first to leverage Docker cache
 COPY package*.json ./
 
