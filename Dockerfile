@@ -11,6 +11,6 @@ FROM nginx:alpine
 # Copy the built files from the builder stage to Nginx's web directory
 COPY --from=builder /app/dist /usr/share/nginx/html
 # Expose port 80 (standard HTTP port for Nginx)
-EXPOSE 80
+EXPOSE 443
 # Command to start Nginx
 CMD ["nginx", "-g", "daemon off;"]
