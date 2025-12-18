@@ -11,6 +11,6 @@ FROM nginx:alpine
 # Copy the built files from the builder stage to Nginx's web directory
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-EXPOSE 8000
+EXPOSE 8080
 # Command to start Nginx
 CMD ["nginx", "-g", "daemon off;"]
