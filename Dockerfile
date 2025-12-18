@@ -1,16 +1,17 @@
-# Stage 1: Build the React app
-FROM node:22-alpine AS builder
-WORKDIR /app
+# Use a specific, stable base image
+FROM node:20-alpine
+
+# Set the working directory inside the container
+WORKDIR /src
+
+# Copy package.json and yarn.lock (or package-lock.json) first to leverage Docker cache
 COPY package*.json ./
-RUN npm install
+
+# Install application dependencies
+RUN npm install --production
+
+# Copy the rest of the application code to the container
 COPY . .
-RUN npm run build
 
-# Stage 2: Serve the static files with Nginx
-FROM nginx:alpine
-# Copy the built files from the builder stage to Nginx's web directory
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-EXPOSE 8080
-# Command to start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Define the command to run the application
+CMD ["npm", "start"]
